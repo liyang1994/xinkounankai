@@ -1,7 +1,12 @@
 <template>
     <div class="Main">
         <Menu></Menu>
-        <el-button type="info"  plain>创建房间</el-button>
+        <el-button type="info"  plain @click="create()">创建房间</el-button>
+        <el-row v-show="msg">
+          <el-col :span="24">
+            <span style="color: red;">创建失败，失败原因未知</span>
+          </el-col>
+        </el-row>
     </div>
     
 </template>
@@ -14,20 +19,34 @@ export default {
     },
     data () {
         return {
+            msg: false,
             tabBarImgArr:[   //图片切换
-                // {normal: require('./../../../static/img/icon_home.png'), selected: require('./../../../static/img/icon_home_selected.png')},
-                // {normal: require('./../../../static/img/icon_intro.png'), selected: require('./../../../static/img/icon_intro_selected.png')},
-                // {normal: require('./../../../static/img/icon_search.png'), selected: require('./../../../static/img/icon_search_selected.png')},
-                // {normal: require('./../../../static/img/icon_chat.png'), selected: require('./../../../static/img/icon_chat_selected.png')},
-                // {normal: require('./../../../static/img/icon_mine.png'), selected: require('./../../../static/img/icon_mine_selected.png')}
+                
             ]
         }
     },
     methods:{
-        // switchTo: function (path) {
-        //     // console.log(this.$router)
-        //     this.$router.replace(path)
-        // }
+        create: function () {
+            var user = JSON.parse(localStorage.getItem('user'))
+            this.$axios({
+                method:'post',									
+                url:'http://127.0.0.1:8888/createroom',
+                params: {
+                    username: user.username,
+                    id: user.id
+                }
+            }).then((response) =>{          //返回promise(ES6语法)
+                console.log(response.data)       //请求成功返回的数
+                if(response.data.length > 0) {
+                    localStorage.setItem('gameroom',JSON.stringify(response.data[0]))
+                    this.$router.push({path:'/ingame/'+response.data[0].roomid})
+                } else {
+                    this.msg = true
+                }
+            }).catch((error) =>{
+                console.log(error)       //请求失败返回的数据
+            })
+        }
     }
 }
 </script>

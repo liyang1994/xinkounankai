@@ -5,6 +5,7 @@ import Main from '@/components/Main'
 import Search from '@/components/Search'
 import Chat from '@/components/Chat'
 import Setting from '@/components/Setting'
+import InGame from '@/components/InGame'
 import axios from 'axios'
 Vue.use(Router)
 Vue.prototype.$axios = axios
@@ -34,6 +35,11 @@ export default new Router({
       path: '/setting',
       name: 'Setting',
       component: Setting
+    },
+    {
+      path: '/ingame/:id',
+      name: 'InGame',
+      component: InGame
     }
   ]
 })

@@ -47,7 +47,7 @@ export default {
       }).then((response) =>{          //返回promise(ES6语法)
           console.log(response.data)       //请求成功返回的数
           if(response.data.length > 0) {
-            localStorage.setItem('user',response.data[0])
+            localStorage.setItem('user',JSON.stringify(response.data[0]))
             this.$router.push({path:'/main'})
           } else {
             this.msg = true
