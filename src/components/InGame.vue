@@ -43,9 +43,14 @@
             <el-card class="box-card">
                 <div v-for="obj in liaotian" :key="obj" class="text item">
                     <el-row>
-                        <el-col :span="24" style="text-align: right;">
+                        <el-col v-show="obj.username == username" :span="24" style="text-align: right;">
                             <div class="grid-content bg-purple">
-                                {{obj}}
+                               {{obj.centent}}&nbsp;&nbsp;:我
+                            </div>
+                        </el-col>
+                        <el-col v-show="obj.username != username" :span="24" style="text-align: left;">
+                            <div class="grid-content bg-purple">
+                                {{obj.username}}:&nbsp;&nbsp;{{obj.centent}}
                             </div>
                         </el-col>
                     </el-row> 
@@ -79,7 +84,9 @@ export default {
             list: [],
             timer: null,
             centent: '',
-            liaotian: []
+            liaotian: [],
+            username: '',
+            userid: ''
         }
     },
     components: {
@@ -105,15 +112,61 @@ export default {
             }).catch((error) =>{
                 console.log(error)       //请求失败返回的数据
             })
+
+            this.select()
         },
         fasong(){
-            this.liaotian.push(this.centent)
-            this.liaotian.reverse();
-            console.log(this.centent)
-            this.centent = ''
+            if(this.centent == '') {
+                return 
+            }
+            this.$axios({
+                method:'post',									
+                url:'http://127.0.0.1:8888/insertLiaotian',
+                 params: {
+                    username: this.username,
+                    id: this.userid,
+                    centent: this.centent,
+                    roomid: this.roomid
+                }
+            }).then((response) =>{          //返回promise(ES6语法)
+                console.log(response.data)       //请求成功返回的数
+                if(response.data.length > 0) {
+                    this.liaotian = response.data
+                    this.centent = ''
+                    //setTimeout(this.selectRoom(),3000)    
+                } 
+            }).catch((error) =>{
+                console.log(error)       //请求失败返回的数据
+            })
+            
+            // this.liaotian.push(this.centent)
+            // this.liaotian.reverse();
+            // console.log(this.centent)
+            // this.centent = ''
+        },
+        select () {
+            this.$axios({
+                method:'get',									
+                url:'http://127.0.0.1:8888/selectLiaotian',
+                 params: {
+                    roomid: this.roomid
+                }
+            }).then((response) =>{          //返回promise(ES6语法)
+                console.log(response.data)       //请求成功返回的数
+                if(response.data.length > 0) {
+                    this.liaotian = response.data
+                    //this.centent = ''
+                    //setTimeout(this.selectRoom(),3000)    
+                } 
+            }).catch((error) =>{
+                console.log(error)       //请求失败返回的数据
+            })
         }
     },
     mounted: function () {
+        var user = JSON.parse(localStorage.getItem('user'))
+        this.userid = user.id
+        this.username = user.username
         this.selectRoom()
         //this.timer = setInterval(this.selectRoom,5000)    
     }
