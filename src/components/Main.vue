@@ -53,7 +53,7 @@ export default {
             var user = JSON.parse(localStorage.getItem('user'))
             this.$axios({
                 method:'post',									
-                url:'http://127.0.0.1:8888/createroom',
+                url:this.$apiurl+'createroom',
                 params: {
                     username: user.username,
                     id: user.id
@@ -74,7 +74,7 @@ export default {
             var user = JSON.parse(localStorage.getItem('user'))
             this.$axios({
                 method:'post',									
-                url:'http://127.0.0.1:8888/insert/',
+                url:this.$apiurl+'insert/',
                 params: {
                     roomid:this.room.roomid,
                     username: user.username,

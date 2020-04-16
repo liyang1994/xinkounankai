@@ -43,13 +43,15 @@
             <el-card class="box-card">
                 <div v-for="obj in liaotian" :key="obj" class="text item">
                     <el-row>
-                        <el-col v-show="obj.username == username" :span="24" style="text-align: right;">
-                            <div class="grid-content bg-purple">
+                        <el-col v-show="obj.username == username" :span="24" style="text-align: right;width: auto;float: right;">
+                            <div class="grid-content bg-purple right">
+                                {{obj.createtime | capitalize}}<br>
                                {{obj.centent}}&nbsp;&nbsp;:我
                             </div>
                         </el-col>
-                        <el-col v-show="obj.username != username" :span="24" style="text-align: left;">
-                            <div class="grid-content bg-purple">
+                        <el-col v-show="obj.username != username" :span="24" style="text-align: left;width: auto;">
+                            <div class="grid-content bg-purple left">
+                                {{obj.createtime}}<br>
                                 {{obj.username}}:&nbsp;&nbsp;{{obj.centent}}
                             </div>
                         </el-col>
@@ -102,7 +104,7 @@ export default {
         selectRoom() {
             this.$axios({
                 method:'get',									
-                url:'http://127.0.0.1:8888/selectRoom/'+this.roomid,
+                url:this.$apiurl+'selectRoom/'+this.roomid,
             }).then((response) =>{          //返回promise(ES6语法)
                 console.log(response.data)       //请求成功返回的数
                 if(response.data.length > 0) {
@@ -121,7 +123,7 @@ export default {
             }
             this.$axios({
                 method:'post',									
-                url:'http://127.0.0.1:8888/insertLiaotian',
+                url:this.$apiurl+'insertLiaotian',
                  params: {
                     username: this.username,
                     id: this.userid,
@@ -147,7 +149,7 @@ export default {
         select () {
             this.$axios({
                 method:'get',									
-                url:'http://127.0.0.1:8888/selectLiaotian',
+                url:this.$apiurl+'selectLiaotian',
                  params: {
                     roomid: this.roomid
                 }
@@ -167,8 +169,14 @@ export default {
         var user = JSON.parse(localStorage.getItem('user'))
         this.userid = user.id
         this.username = user.username
-        this.selectRoom()
-        //this.timer = setInterval(this.selectRoom,5000)    
+        //this.selectRoom()
+        this.timer = setInterval(this.selectRoom,5000)    
+    },
+    filters: {
+        capitalize: function (value) {
+            
+            return value.split('.')[0]
+        }
     }
 }
 </script>
@@ -196,6 +204,25 @@ export default {
     max-height: 250px;
     height: 250px;
     overflow:scroll;
+    padding: 10px;
+}
+.right {
+    border: 1px solid #777;
+    border-radius: 5px;
+    background-color: rgb(95, 240, 126);
+    padding-right: 5px;
+    padding: 3px;
+    margin-top: 10px;
+    
+}
+.left {
+    border: 1px solid #777;
+    border-radius: 5px;
+    background-color: rgb(248, 248, 248);
+    padding-left: 5px;
+    padding: 3px;
+    margin-top: 10px;
+    
 }
 /* .main {
     border: 1px solid #777;

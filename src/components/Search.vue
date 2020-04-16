@@ -62,7 +62,7 @@ export default {
             }
             this.$axios({
                 method:'get',									
-                url:'http://127.0.0.1:8888/selectRoom/'+this.room,
+                url:this.$apiurl+'selectRoom/'+this.room,
             }).then((response) =>{          //返回promise(ES6语法)
                 console.log(response.data)       //请求成功返回的数
                 if(response.data.length > 0) {
@@ -79,7 +79,7 @@ export default {
             var user = JSON.parse(localStorage.getItem('user'))
             this.$axios({
                 method:'post',									
-                url:'http://127.0.0.1:8888/isRoom/',
+                url:this.$apiurl+'isRoom/',
                 params: {
                     id: user.id
                 }
@@ -109,7 +109,7 @@ export default {
             var user = JSON.parse(localStorage.getItem('user'))
             this.$axios({
                 method:'post',									
-                url:'http://127.0.0.1:8888/insert/',
+                url:this.$apiurl+'insert/',
                 params: {
                     roomid:this.room,
                     username: user.username,

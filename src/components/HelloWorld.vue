@@ -39,7 +39,7 @@ export default {
       console.log('a')
       this.$axios({
           method:'post',									
-          url:'http://127.0.0.1:8888/login',
+          url:this.$apiurl+'login',
           params: {
             username: this.username,
             pwd: this.pwd
