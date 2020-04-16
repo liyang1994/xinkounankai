@@ -9,16 +9,28 @@
         </el-row>
         <div class="main">
             <el-card class="box-card">
-                <div v-for="item in list" :key="item" class="text item">
+                <div v-for="(item,index) in list"  class="text item">
                     <el-row>
                         <el-col :span="4" style="text-align: right;">
                             <div class="grid-content bg-purple">
                                 <el-avatar icon="el-icon-user-solid"></el-avatar>
                             </div>
                         </el-col>
-                        <el-col :span="12" style="text-align: left;font-size: 22px;padding: 6px;">
+                        <el-col :span="10" style="text-align: left;font-size: 22px;padding: 6px;">
                             <div class="grid-content bg-purple-light">
-                                {{item.username}}
+                               {{index+1}} {{item.username}}
+                               
+                               <!-- {{cards['np'+((index+2)+(index*3))][0].name}} -->
+                            </div>
+                        </el-col>
+                        <el-col :span="10" style="text-align: left;font-size: 22px;padding: 6px;" v-show="item.username != username || cardMsg[(index+1)] == '失败了'">
+                            <div class="grid-content bg-purple-light">
+                               
+                               <span v-show="cards[(index+1)][0].king == 0">{{cards[(index+1)][0].name}}</span>
+                               <span v-show="cards[(index+1)][1].king == 0 && cards[(index+1)][0].king == 1">{{cards[(index+1)][1].name}}</span>
+                               <span v-show="cards[(index+1)][2].king == 0 && cards[(index+1)][1].king == 1">{{cards[(index+1)][2].name}}</span>
+                               <span v-show="cardMsg[(index+1)] == '失败了'" style="color:red">失败了</span>
+                               <!-- {{cards['np'+((index+2)+(index*3))][0].name}} -->
                             </div>
                         </el-col>
                     </el-row> 
@@ -41,7 +53,7 @@
         </div>
         <div class="liaotian" v-show="liaotian.length>0">
             <el-card class="box-card">
-                <div v-for="obj in liaotian" :key="obj" class="text item">
+                <div v-for="obj in liaotian"  class="text item">
                     <el-row>
                         <el-col v-show="obj.username == username" :span="24" style="text-align: right;width: auto;float: right;">
                             <div class="grid-content bg-purple right">
@@ -88,7 +100,12 @@ export default {
             centent: '',
             liaotian: [],
             username: '',
-            userid: ''
+            userid: '',
+            //cards: {},
+            cards: {
+                
+            },
+            cardMsg:{}
         }
     },
     components: {
@@ -106,7 +123,7 @@ export default {
                 method:'get',									
                 url:this.$apiurl+'selectRoom/'+this.roomid,
             }).then((response) =>{          //返回promise(ES6语法)
-                console.log(response.data)       //请求成功返回的数
+                //console.log(response.data)       //请求成功返回的数
                 if(response.data.length > 0) {
                     this.list = response.data
                     //setTimeout(this.selectRoom(),3000)    
@@ -121,6 +138,32 @@ export default {
             if(this.centent == '') {
                 return 
             }
+            for (let i = 0; i < this.list.length; i++) {
+                if(this.list[i].username == this.username) {
+                    var usercard = this.cards[""+(i+1)]
+                    if(usercard[0].king == 0) {
+                        if(this.centent.indexOf(usercard[0].name.split('：')[1])>-1){
+                            usercard[0].king = 1
+                        }
+                    }
+                    else if(usercard[1].king == 0 && usercard[0].king == 1) {
+                        if(this.centent.indexOf(usercard[1].name.split('：')[1])>-1){
+                            usercard[1].king = 1
+                        }
+                    }
+                    else if(usercard[2].king == 0 && usercard[1].king == 1) {
+                        if(this.centent.indexOf(usercard[2].name.split('：')[1])>-1){
+                            usercard[2].king = 1
+                            this.cardMsg[""+(i+1)] = "失败了"
+                        }
+                    }
+                    else {
+                       
+                    }
+                    this.cards[""+(i+1)] = usercard
+                }
+                
+            }
             this.$axios({
                 method:'post',									
                 url:this.$apiurl+'insertLiaotian',
@@ -131,7 +174,7 @@ export default {
                     roomid: this.roomid
                 }
             }).then((response) =>{          //返回promise(ES6语法)
-                console.log(response.data)       //请求成功返回的数
+                //console.log(response.data)       //请求成功返回的数
                 if(response.data.length > 0) {
                     this.liaotian = response.data
                     this.centent = ''
@@ -154,12 +197,24 @@ export default {
                     roomid: this.roomid
                 }
             }).then((response) =>{          //返回promise(ES6语法)
-                console.log(response.data)       //请求成功返回的数
+                //console.log(response.data)       //请求成功返回的数
                 if(response.data.length > 0) {
                     this.liaotian = response.data
                     //this.centent = ''
                     //setTimeout(this.selectRoom(),3000)    
                 } 
+            }).catch((error) =>{
+                console.log(error)       //请求失败返回的数据
+            })
+        },
+        selectCard () {
+            this.$axios({
+                method:'get',									
+                url:this.$apiurl+'selectCard',
+            }).then((response) =>{          //返回promise(ES6语法)
+                //console.log(response.data)       //请求成功返回的数
+                //this.cards = response.data
+                this.cards =  response.data
             }).catch((error) =>{
                 console.log(error)       //请求失败返回的数据
             })
@@ -169,12 +224,12 @@ export default {
         var user = JSON.parse(localStorage.getItem('user'))
         this.userid = user.id
         this.username = user.username
-        //this.selectRoom()
+        this.selectRoom()
+        this.selectCard()
         this.timer = setInterval(this.selectRoom,5000)    
     },
     filters: {
         capitalize: function (value) {
-            
             return value.split('.')[0]
         }
     }

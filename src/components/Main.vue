@@ -32,7 +32,7 @@ export default {
         var user = JSON.parse(localStorage.getItem('user'))
         this.$axios({
             method:'post',									
-            url:'http://127.0.0.1:8888/isRoom/',
+            url:this.$apiurl+'isRoom/',
             params: {
                 id: user.id
             }
