@@ -1,6 +1,9 @@
 # xinkounankai
 
-> A Vue.js project
+> 前端用vue跟ElementUi，后端用springboot+mybatis+mysql写的一个害你心口难开的小游戏
+游戏内容是一个房间可以加入四个人，然后每个人都会有三张词条，
+如果自己聊天的文字包含词条的内容就算输，连输三把就算失败。
+可以创建房间，搜索房间，加入房间
 
 ## Build Setup
 
