@@ -72,19 +72,21 @@
             </el-card>
         </div>
         <div class="bottom-tab">
-            <el-row>
-               
-                <el-col :span="20"><div >
-                    <el-input
+             <el-input
                         placeholder="请输入内容"
                         v-model="centent"
                         clearable>
-                    </el-input>
+                </el-input>
+                <el-button  type="success" @click="fasong()">发送</el-button>
+            <!-- <el-row>
+               
+                <el-col :span="20"><div >
+                   
                 </div></el-col>
                 <el-col :span="4"><div>
-                    <el-button  icon="el-icon-s-promotion" @click="fasong()"></el-button>
+                    
                 </div></el-col>
-            </el-row>
+            </el-row> -->
         </div>
     </div>
 </template>
@@ -211,6 +213,9 @@ export default {
             this.$axios({
                 method:'get',									
                 url:this.$apiurl+'selectCard',
+                params: {
+                    roomid: this.roomid
+                }
             }).then((response) =>{          //返回promise(ES6语法)
                 //console.log(response.data)       //请求成功返回的数
                 //this.cards = response.data
