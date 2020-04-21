@@ -8,8 +8,8 @@ import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
-//Vue.prototype.$apiurl = 'http://140.143.224.111:9999/'
-Vue.prototype.$apiurl = 'http://127.0.0.1:9999/'
+Vue.prototype.$apiurl = 'http://140.143.224.111:9999/'
+//Vue.prototype.$apiurl = 'http://127.0.0.1:9999/'
 Vue.use(ElementUI);
 /* eslint-disable no-new */
 new Vue({
