@@ -4,6 +4,10 @@
 游戏内容是一个房间可以加入四个人，然后每个人都会有三张词条，
 如果自己聊天的文字包含词条的内容就算输，连输三把就算失败。
 可以创建房间，搜索房间，加入房间
+地址http://140.143.224.111/xinkounankai/
+用户名       密码
+liyang      liyang
+chenjiali   chenjiali
 
 ## Build Setup
 
