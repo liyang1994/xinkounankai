@@ -21,8 +21,8 @@
             <div class="main"  v-show="list.length > 0">
                 <el-row>
                     <el-col :span="9" style="padding-top: 8px;"><div class="grid-content bg-purple-dark">房间号：{{room}}</div></el-col>
-                    <el-col :span="9" style="padding-top: 8px;"><div class="grid-content bg-purple-dark">人数：{{list.length}}</div></el-col>
-                    <el-col :span="6"><div class="grid-content bg-purple-dark"><el-button type="success" plain @click="insert()">加入</el-button></div></el-col>
+                    <el-col :span="9" style="padding-top: 8px;"><div class="grid-content bg-purple-dark">人数：{{list.length}}<label v-show="list.length==4">(满)</label></div></el-col>
+                    <el-col :span="6"><div class="grid-content bg-purple-dark"><el-button v-show="list.length<4" type="success" plain @click="insert()">加入</el-button></div></el-col>
                 </el-row>
             </div>
 

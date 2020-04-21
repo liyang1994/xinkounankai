@@ -29,7 +29,7 @@
                                <span v-show="cards[(index+1)][0].king == 0">{{cards[(index+1)][0].name}}</span>
                                <span v-show="cards[(index+1)][1].king == 0 && cards[(index+1)][0].king == 1">{{cards[(index+1)][1].name}}</span>
                                <span v-show="cards[(index+1)][2].king == 0 && cards[(index+1)][1].king == 1">{{cards[(index+1)][2].name}}</span>
-                               <span v-show="cardMsg[(index+1)] == '失败了'" style="color:red">失败了</span>
+                               <span v-show="cards[(index+1)][0].king == 1 &&cards[(index+1)][1].king == 1 &&cards[(index+1)][2].king == 1" style="color:red">失败了</span>
                                <!-- {{cards['np'+((index+2)+(index*3))][0].name}} -->
                             </div>
                         </el-col>
@@ -135,27 +135,32 @@ export default {
             })
 
             this.select()
+            this.selectCard()
         },
         fasong(){
             if(this.centent == '') {
                 return 
             }
+            var cardid = 0
             for (let i = 0; i < this.list.length; i++) {
                 if(this.list[i].username == this.username) {
                     var usercard = this.cards[""+(i+1)]
                     if(usercard[0].king == 0) {
                         if(this.centent.indexOf(usercard[0].name.split('：')[1])>-1){
                             usercard[0].king = 1
+                            cardid = usercard[0].id
                         }
                     }
                     else if(usercard[1].king == 0 && usercard[0].king == 1) {
                         if(this.centent.indexOf(usercard[1].name.split('：')[1])>-1){
                             usercard[1].king = 1
+                            cardid = usercard[1].id
                         }
                     }
                     else if(usercard[2].king == 0 && usercard[1].king == 1) {
                         if(this.centent.indexOf(usercard[2].name.split('：')[1])>-1){
                             usercard[2].king = 1
+                            cardid = usercard[2].id
                             this.cardMsg[""+(i+1)] = "失败了"
                         }
                     }
@@ -167,24 +172,39 @@ export default {
                 
             }
             this.$axios({
-                method:'post',									
-                url:this.$apiurl+'insertLiaotian',
-                 params: {
-                    username: this.username,
-                    id: this.userid,
-                    centent: this.centent,
-                    roomid: this.roomid
-                }
-            }).then((response) =>{          //返回promise(ES6语法)
-                //console.log(response.data)       //请求成功返回的数
-                if(response.data.length > 0) {
-                    this.liaotian = response.data
-                    this.centent = ''
-                    //setTimeout(this.selectRoom(),3000)    
-                } 
-            }).catch((error) =>{
-                console.log(error)       //请求失败返回的数据
-            })
+                    method:'post',									
+                    url:this.$apiurl+'insertLiaotian',
+                    params: {
+                        username: this.username,
+                        id: this.userid,
+                        centent: this.centent,
+                        roomid: this.roomid
+                    }
+                }).then((response) =>{          //返回promise(ES6语法)
+                    //console.log(response.data)       //请求成功返回的数
+                    if(response.data.length > 0) {
+                        this.liaotian = response.data
+                        this.centent = ''
+                        //setTimeout(this.selectRoom(),3000)    
+                    } 
+                }).catch((error) =>{
+                    console.log(error)       //请求失败返回的数据
+                })
+            if(cardid !=0) {
+                this.$axios({
+                    method:'get',									
+                    url:this.$apiurl+'isFail',
+                    params: {
+                        cardid: cardid,
+                        roomid: this.roomid
+                    }
+                }).then((response) =>{          //返回promise(ES6语法)
+                    this.selectCard()
+                }).catch((error) =>{
+                    console.log(error)       //请求失败返回的数据
+                })
+            }
+            
             
             // this.liaotian.push(this.centent)
             // this.liaotian.reverse();

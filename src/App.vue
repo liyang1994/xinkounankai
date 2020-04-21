@@ -13,7 +13,7 @@ export default {
 
 <style>
 body {
-  background-color:beige;
+  background-color:#efefef;
   height: 100%;
 }
 #app {
